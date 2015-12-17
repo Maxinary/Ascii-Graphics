@@ -156,7 +156,8 @@ class Line{
 
 void Line::render(int screensize){
 	bool sect = false;
-	std::system("clear");
+	std::cout<<"\033[0;0H";
+
 	for(int i=0;i<screensize;i++){
 		for(int j=0;j<screensize;j++){
 			sect = false;
