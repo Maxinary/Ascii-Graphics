@@ -75,11 +75,11 @@ bool intersect(double x1, double x2, double y1, double y2, int sx, int sy){
 		y1 = y2;
 		y2 = swap;
 	}
-	if(x1<=sx && x2>=sx){ //checks if x values intersect square
+	if(x1<=sx && x2>sx){ //checks if x values intersect square
 		double slope = ((double)(y1-y2))/((double)(x1-x2));//TODO fix divide by 0
 		int leftintersect = y1 + slope*(sx-x1);
 		int rightintersect = y1 + slope*(sx+1-x2);
-		if(leftintersect>=sy){
+		if(leftintersect>sy){
 			if(leftintersect<=sy+1){
 				return true;
 			}
@@ -207,7 +207,7 @@ int main(){
 		l.rotate(M_PI/32);
 		l.render(40);
 		std::cout<<"values: "<<l.p2[0]<<", "<<l.p2[1]<<"\n";
-		usleep(50000);
+		usleep(10000);
 	}
 	//free(a);
 	//std::cout<<atan((double)(xpoint-xcenter)/(ypoint-ycenter));
