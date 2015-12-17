@@ -1,3 +1,4 @@
+#define _USE_MATH_DEFINES
 #include <cmath>
 #include <valarray>
 #include <cstdlib>
@@ -44,13 +45,12 @@ class Polygon{
 double* rotate(double xpoint, double ypoint, double xcenter,double ycenter, double rads){
 	//idea here is find the vector from center of rotation
 	//and then change that vector's angle to theta + degree
-//	double angle = atan((ypoint-ycenter)/(xpoint-xcenter));
-	double angle = atan((xpoint-xcenter)/(ypoint-ycenter));
+	double angle = atan((double)(xpoint-xcenter)/(ypoint-ycenter));
 	double distance = std::sqrt(pow(xcenter-xpoint,2)+pow(ycenter-ypoint,2));
-	double pos[2];
+	double* pos = (double*) malloc(2);
 	std::cout<<angle+rads<<"\n";
-	pos[0] = sin(angle-rads)*distance+ycenter;
-	pos[1] = cos(angle-rads)*distance+xcenter;
+	pos[0] = sin(angle+rads)*distance+ycenter;
+	pos[1] = cos(angle+rads)*distance+xcenter;
 	return pos;
 }
 
@@ -139,12 +139,18 @@ class Line{
 	public:
 		int p1[2];
 		int p2[2];
+		double currentRotation;
+		double hypoteneuse;
+		double originalRotation;
 		Line(int _x, int _y, int _x_, int _y_){
 			p1[0] = _x;
 			p1[1] = _y;
 			p2[0] = _x_;
 			p2[1] = _y_;
+			hypoteneuse = std::sqrt(pow(_x-_x_,2)+pow(_y-_y_,2));
+			currentRotation = atan((double)(_x_-_x)/(_y_-_y));
 		};
+		void rotate(double);
 		void render(int);
 };
 
@@ -165,7 +171,7 @@ void Line::render(int screensize){
 				sect = true;
 			}
 			if(sect){
-				std::cout<<"--";
+				std::cout<<" 0";
 			}else{
 				std::cout<<"  ";
 			}
@@ -174,23 +180,35 @@ void Line::render(int screensize){
 	}
 }
 
+void Line::rotate(double rads){
+	currentRotation+=rads;
+	p2[0] = sin(currentRotation)*hypoteneuse+p1[0];
+	p2[1] = cos(currentRotation)*hypoteneuse+p1[1];
+}
 
 int main(){
-	Triangle trig(40, 40);
+	/*Triangle trig(40, 40);
 	for(int i=0;i<8;i++){
 		trig.render();
 		trig.turn(3.1415/8);
 		usleep(1000000);
-	}
-	/*Line l(20,20,10,0);
-	l.render(40);
-	double* a;
-	for(int i=0;i<5;i++){
-		a = rotate(l.p2[0],l.p2[1],l.p1[0],l.p1[1],3.1415/5);
-		l.p2[0] = *a;
-		l.p2[1] = *(a+1);
-		l.render(40);
-		usleep(1000000);
 	}*/
+	Line l(20,20,20,0);
+	l.render(40);
+	int b;
+	std::cout<<"number? ";
+	std::cin >> b;
+	double* a;
+	for(int i=0;i<b;i++){
+//		a = rotate(l.p2[0], l.p2[1], l.p1[0], l.p1[1], 3.14159265/16);
+//		l.p2[0] = *a;
+//		l.p2[1] = *(a+1);
+		l.rotate(M_PI/32);
+		l.render(40);
+		std::cout<<"values: "<<l.p2[0]<<", "<<l.p2[1]<<"\n";
+		usleep(50000);
+	}
+	//free(a);
+	//std::cout<<atan((double)(xpoint-xcenter)/(ypoint-ycenter));
 	return 0;
 }
